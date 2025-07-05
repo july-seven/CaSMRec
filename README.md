@@ -1,18 +1,17 @@
 # CaSMRec
-This is the data and code for our paper 'CaSMRec: Causal Substructure-aligned Medication Recommendation'.
+This is the data and code for our paper `CaSMRec: Causal Substructure-aligned Medication Recommendation`.
 
 ## Prerequisites
 Make sure your local environment has the following installed:
 
-
 * `torch = 2.0.1`
-* `spacy == 2.1.9`
-* `tensorboardx == 2.0`
-* `tokenizers == 0.7.0`
-* `tokenizers == 0.7.0`
-* `numpy == 1.15.1`
-* `python == 3.7`
-* `transformers == 2.9.1`
+* `python == 3.8.17`
+* `dill == 1.22.3`
+* `pandas == 2.0.2`
+* `numpy == 1.22.3`
+* `cdt == 0.6.0`
+* `dowhy == 0.10.1`
+* `statsmodels == 0.14.0`
 
 ## Datasets
 
@@ -27,35 +26,29 @@ We provide the dataset in the [data](data/) folder.
 
 
 * src
-    * README.md
-    * data_loader.py
-    * train.py
-    * model_net.py
-    * outer_models.py
-    * util.py
-    * processing.py
+    * `modules/`:Code for model definition
+    * `utils.py`: Code for data preparation and indicator calculation
+    * `training.py`:Code for functions that train and evaluate the model
+    * `main.py`:Code for training and evaluating the model
   
-* datas
-    * origin
-        * drug-atc.csv: drug to atc code mapping file.
-        * ndc2atc_level4.csv: NDC to RXCUI mapping file.
-        * ndc2rxnorm_mapping.txt: NDC to RXCUI mapping file.
-        * drug-DDI.csv: this a large file, containing the drug DDI information, coded by CID. The file could be downloaded from https://drive.google.com/file/d/1mnPc0O0ztz0fkv3HF-dpmBb8PLWsEoDz/view?usp=sharing
-    * output
-        * ddi_A_final.pkl：ddi adjacency matrix
-        * ehr_adj_final.pkl：: if two drugs appear in one set, then they are connected
+* `datas/`
+    * `input/`
+        * `drug-atc.csv`: drug to atc code mapping file.
+        * `ndc2atc_level4.csv`: NDC to RXCUI mapping file.
+        * `ndc2rxnorm_mapping.txt`: NDC to RXCUI mapping file.
+        * `idx2ndc.pkl`：ACT-4 to rxnorm mapping file.
+        * `idx2drug.pkl`：ACT-4 to SMILES mapping file.
+    * `output/`
+        *`ddi_A_final.pkl`：ddi adjacency matrix
         * records_final.pkl: the final diagnosis-procedure-medication EHR records of each patient, used for train/val/test split on MIMIC_III dataset
-        * records_final_4.pkl: the final diagnosis-procedure-medication EHR records of each patient, used for train/val/test split on MIMIC_IV dataset
         * voc_final.pkl：diag/prod/med index to code dictionary on MIMIC_III dataset
-        * voc_final_4.pkl: diag/prod/med index to code dictionary on MIMIC_IV dataset
-    * diag_proc_ccs.pkl
-    * diag_proc_ccs_4.pkl
+        * `ddi_matrix_H.pkl`：H mask structure
+    * `graphs/`
+        * `causal_graph.pkl`：causal graph
+        * `Diag_Med_causal_effect.pkl`,`Proc_Med_causal_effect.pkl`：causal effectss of med and diag/proc
+    * `ddi_mask_H.py`：the python code for generate `ddi_mask_H.pkl` and `substrucure_smiles.pkl`.
+    * `processing.py:`:the python code for generage `voc_final.pkl`,`records_final.pkl`,`ddi_A_final.pkl`.
 
-
-
-Clinical Classifications Software (CCS) for ICD-9-CM is a tool from HCUP.
-Next, download the zip package from [web](https://www.hcup-us.ahrq.gov/toolssoftware/ccs/Single_Level_CCS_2015.zip) and unzip the file ```dx2015.csv``` and ```pr2015.csv```, respectively. 
-use the script ```python ICD2CCS.py``` to obtain CCS labels and attach them on corresponding csv files. After the paper is accepted, we will further upload the relevant data preprocessing files.
 
 ## Step 1: Data Processing 
 
@@ -69,24 +62,17 @@ use the script ```python ICD2CCS.py``` to obtain CCS labels and attach them on c
 ```
 ## Step 2: Package Dependency
 First, install the [conda](https://www.anaconda.com/)
-Then, create the conda environment through yaml file:
 
+## Step 4: data processing
 ```
-conda env create -f mrln_env.yaml
+python data/processing.py
+python data/ddi_mask_H.py
+python src/Relevance_construction.py
 ```
-
 ## Step 3: run the code
 ```
-python train.py
+python main.py
 ```
-Please run `train.py` to begin training and testing.
-
-On a single NVIDIA® GeForce RTX™ 3080 Ti (10GB) GPU, a typical run takes 2.5 hours to complete.
-
-## TODO
-More training scripts for easy training will be added soon.
-
-
 
 ### Acknowledge
 
@@ -94,4 +80,5 @@ Partial credit to previous reprostories:
 
 - https://github.com/sjy1203/GAMENet
 - https://github.com/ycq091044/SafeDrug
-- https://github.com/BarryRun/COGNet
+- https://github.com/yangnianzu0515/MoleRec
+- https://github.com/lixiang-222/CIDGMed
