@@ -39,9 +39,9 @@ We provide the dataset in the [data](data/) folder.
         * `idx2ndc.pkl`：ACT-4 to rxnorm mapping file.
         * `idx2drug.pkl`：ACT-4 to SMILES mapping file.
     * `output/`
-        *`ddi_A_final.pkl`：ddi adjacency matrix
-        * records_final.pkl: the final diagnosis-procedure-medication EHR records of each patient, used for train/val/test split on MIMIC_III dataset
-        * voc_final.pkl：diag/prod/med index to code dictionary on MIMIC_III dataset
+        * `ddi_A_final.pkl`：ddi adjacency matrix
+        * `records_final.pkl`: the final diagnosis-procedure-medication EHR records of each patient, used for train/val/test split on MIMIC_III dataset
+        * `voc_final.pkl`：diag/prod/med index to code dictionary on MIMIC_III dataset
         * `ddi_matrix_H.pkl`：H mask structure
     * `graphs/`
         * `causal_graph.pkl`：causal graph
